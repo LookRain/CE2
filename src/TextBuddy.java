@@ -16,36 +16,45 @@ public class TextBuddy {
 	public static void main(String[ ] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
 		fileName = args[0];
-	
-		try {
-			File file = new File(fileName);
-			if (!file.exists()) {
-				throw new FileNotFoundException();
-			}
+		if (checkFile(fileName)) {		
 			System.out.println(String.format(WELCOME_MESSAGE, fileName));
 			while (true) {
 				System.out.print("command: ");
 				String input = sc.nextLine();
 				System.out.println(executeCmd(input));
 			}
-		} catch (IOException e){
-			System.out.println(FILE_NOT_FOUND_MESSAGE);
 		}
 	}
-	
-	public static void checkFile(String fileName) {
+
+	/**
+	 * This operation checks if the specified file
+	 * exits in directory.
+	 */
+	public static boolean checkFile(String fileName) {
+		boolean isExistent = true;
 		try {
 			File file = new File(fileName);
 			if (!file.exists()) {
+				isExistent = false;
 				throw new FileNotFoundException();
 			}
+		} catch (IOException e){
+			System.out.println(FILE_NOT_FOUND_MESSAGE);
+		}
+		return isExistent;
 	}
 
+	/**
+	 * This operation checks reads the command input and carries out
+	 * each operation.
+	 */
 	static String executeCmd(String input) throws IOException {
+		if (input.length() < 4) {
+			return INVALID_COMMAND_MESSAGE;
+		}
 		if (input.substring(0, 3).equals("add")) {
 			String taskName = input.substring(4);
 			return add(taskName);
-
 		} else if (input.equals("display")) {
 			display();
 		} else if (input.equals("clear")) {
@@ -62,7 +71,7 @@ public class TextBuddy {
 		return "";
 
 	}
-	
+
 	/**
 	 * This operation lets the user exit
 	 * from the program. The program will save the file
@@ -90,20 +99,25 @@ public class TextBuddy {
 		list.clear();
 		return String.format(CLEAR_LIST_MESSAGE, fileName);
 	}
+
+	public static String getList() {
+		String result = "";
+		if (list.isEmpty()) {
+			return String.format(EMPTY_LIST_MESSAGE,fileName);
+		} else {
+			result = "1. " + list.get(0);
+			for (int i = 2; i <= list.size(); i++) {
+				result += System.lineSeparator() + i + ". " + list.get(i - 1) ;
+			}
+		}
+		return result;
+	}
 	/**
 	 * This operation prints out the content of the list
 	 * in the order of which they are put in
 	 */
 	private static void display() {
-		if (list.isEmpty()) {
-			System.out.println(String.format(EMPTY_LIST_MESSAGE,fileName));
-		} else {
-			int index = 1;
-			for (String e: list) {
-				System.out.println(index + ". " + e);
-				index ++;
-			}
-		}
+		System.out.print(getList());
 	}
 	/**
 	 * This operation adds an item into the list
