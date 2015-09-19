@@ -74,7 +74,6 @@ public class TextBuddy {
 		} else {
 			output = INVALID_COMMAND_MESSAGE;
 		}
-
 		return output;
 
 	}
@@ -86,9 +85,11 @@ public class TextBuddy {
 	 * @throws IOException 
 	 */
 	static void exit() throws IOException {
-		update();
+		updateFile();
 		System.exit(0);
 	}
+	
+	
 	/**
 	 * This operation deletes the line that the user
 	 * inputs from the list
@@ -99,6 +100,8 @@ public class TextBuddy {
 		list.remove(index - 1);
 		return ans;
 	}
+	
+	
 	/**
 	 * This operation clears everything from the list
 	 */
@@ -107,6 +110,11 @@ public class TextBuddy {
 		return String.format(CLEAR_LIST_MESSAGE, fileName);
 	}
 
+	
+	/**
+	 * This operation gets the content of the list and add index number in
+	 * front of each item, then put each of them in a new line
+	 */
 	public static String getList() {
 		String result = "";
 		if (list.isEmpty()) {
@@ -119,6 +127,8 @@ public class TextBuddy {
 		}
 		return result;
 	}
+	
+	
 	/**
 	 * This operation prints out the content of the list
 	 * in the order of which they are put in
@@ -126,6 +136,8 @@ public class TextBuddy {
 	private static void display() {
 		System.out.print(getList());
 	}
+	
+	
 	/**
 	 * This operation adds an item into the list
 	 */
@@ -133,12 +145,14 @@ public class TextBuddy {
 		list.add(taskName);
 		return String.format(ADDED_TO_LIST_MESSAGE, fileName) + "\"" + taskName + "\"";
 	}
+	
+	
 	/**
 	 * This operation saves the content of the list in 
 	 * the text file, in the order of which they are put in,
 	 * an index number from 1 will be given to each item
 	 */
-	private static void update() throws IOException {
+	private static void updateFile() throws IOException {
 		FileWriter writer = new FileWriter(fileName);
 		//BufferedWriter output = new BufferedWriter(writer);
 		for (int i = 0; i < list.size(); i ++) {
@@ -153,6 +167,10 @@ public class TextBuddy {
 		Collections.sort(list);
 	}
 
+	/**
+	 * This operation takes in a key word and return the search result in the list for the strings
+	 * containing the keyword/substring
+	 */
 	public static String search(String key) {
 		String result = "";
 		for (int i = 0; i < list.size(); i ++) {
