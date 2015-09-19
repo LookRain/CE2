@@ -12,6 +12,7 @@ public class TextBuddy {
 	public static final String EMPTY_LIST_MESSAGE = "%s is empty";
 	public static final String CLEAR_LIST_MESSAGE = "all content deleted from %s";
 	public static final String DELETE_MESSAGE = "deleted from %s: \"%s\"";
+	public static final String SORTED_MESSAGE = "All tasks have been sorted in alphabetical order";
 
 	public static void main(String[ ] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
@@ -49,25 +50,27 @@ public class TextBuddy {
 	 * each operation.
 	 */
 	static String executeCmd(String input) throws IOException {
-		if (input.length() < 4) {
-			return INVALID_COMMAND_MESSAGE;
-		}
-		if (input.substring(0, 3).equals("add")) {
-			String taskName = input.substring(4);
-			return add(taskName);
-		} else if (input.equals("display")) {
-			display();
-		} else if (input.equals("clear")) {
-			return clear();
-		} else if (input.equals("exit")) {
-			exit();
-		} else if (input.substring(0, 6).equals("delete")) {
-			String taskIndex = input.substring(7);
-			int index = Integer.parseInt(taskIndex);
-			return delete(index);
-		} else {
-			return INVALID_COMMAND_MESSAGE;
-		}
+
+			if (input.split(" ")[0].equals("add")) {
+				String taskName = input.substring(4);
+				return add(taskName);
+			} else if (input.equals("display")) {
+				display();
+			} else if (input.equals("clear")) {
+				return clear();
+			} else if (input.equals("exit")) {
+				exit();
+			} else if (input.split(" ")[0].equals("delete")) {
+				String taskIndex = input.substring(7);
+				int index = Integer.parseInt(taskIndex);
+				return delete(index);
+			} else if (input.equals("sort")) {
+				sort();
+				return SORTED_MESSAGE;
+			} else {
+				return INVALID_COMMAND_MESSAGE;
+			}
+		
 		return "";
 
 	}
@@ -142,4 +145,7 @@ public class TextBuddy {
 		writer.close();
 	}
 
+	public static void sort() {
+		Collections.sort(list);
+	}
 }
