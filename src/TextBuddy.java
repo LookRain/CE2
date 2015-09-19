@@ -51,31 +51,31 @@ public class TextBuddy {
 	 * each operation.
 	 */
 	static String executeCmd(String input) throws IOException {
-
+		String output = "";
 		if (input.split(" ")[0].equals("add")) {
 			String taskName = input.substring(4);
-			return add(taskName);
+			output = add(taskName);
 		} else if (input.equals("display")) {
 			display();
 		} else if (input.equals("clear")) {
-			return clear();
+			output = clear();
 		} else if (input.equals("exit")) {
 			exit();
 		} else if (input.split(" ")[0].equals("delete")) {
 			String taskIndex = input.substring(7);
 			int index = Integer.parseInt(taskIndex);
-			return delete(index);
+			output = delete(index);
 		} else if (input.equals("sort")) {
 			sort();
-			return SORTED_MESSAGE;
+			output = SORTED_MESSAGE;
 		} else if (input.split(" ")[0].equals("search")) {
 			String keyWord = input.substring(7);
-			return search(keyWord);
+			output = search(keyWord);
 		} else {
-			return INVALID_COMMAND_MESSAGE;
+			output = INVALID_COMMAND_MESSAGE;
 		}
 
-		return "";
+		return output;
 
 	}
 
