@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 public class TextBuddy {
 
-	public static String filename = new String();
+	public static String fileName = new String();
 	public static ArrayList<String> list = new ArrayList<String>();
 
 	public static final String WELCOME_MESSAGE =  "Welcome to TextBuddy. %s is ready for use";
@@ -15,28 +15,36 @@ public class TextBuddy {
 
 	public static void main(String[ ] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
-		filename = args[0];
-
+		fileName = args[0];
+	
 		try {
-			File file = new File(filename);
+			File file = new File(fileName);
 			if (!file.exists()) {
 				throw new FileNotFoundException();
 			}
-			System.out.println(String.format(WELCOME_MESSAGE, filename));
+			System.out.println(String.format(WELCOME_MESSAGE, fileName));
 			while (true) {
 				System.out.print("command: ");
 				String input = sc.nextLine();
-				System.out.println(execute(input));
+				System.out.println(executeCmd(input));
 			}
 		} catch (IOException e){
 			System.out.println(FILE_NOT_FOUND_MESSAGE);
 		}
 	}
+	
+	public static void checkFile(String fileName) {
+		try {
+			File file = new File(fileName);
+			if (!file.exists()) {
+				throw new FileNotFoundException();
+			}
+	}
 
-	static String execute(String input) throws IOException {
+	static String executeCmd(String input) throws IOException {
 		if (input.substring(0, 3).equals("add")) {
-			String newInput = input.substring(4);
-			return add(newInput);
+			String taskName = input.substring(4);
+			return add(taskName);
 
 		} else if (input.equals("display")) {
 			display();
@@ -45,8 +53,8 @@ public class TextBuddy {
 		} else if (input.equals("exit")) {
 			exit();
 		} else if (input.substring(0, 6).equals("delete")) {
-			String newInput = input.substring(7);
-			int index = Integer.parseInt(newInput);
+			String taskIndex = input.substring(7);
+			int index = Integer.parseInt(taskIndex);
 			return delete(index);
 		} else {
 			return INVALID_COMMAND_MESSAGE;
@@ -71,7 +79,7 @@ public class TextBuddy {
 	 */
 	private static String delete(int index) {
 		String ans;
-		ans = String.format(DELETE_MESSAGE, filename, list.get(index - 1));
+		ans = String.format(DELETE_MESSAGE, fileName, list.get(index - 1));
 		list.remove(index - 1);
 		return ans;
 	}
@@ -80,7 +88,7 @@ public class TextBuddy {
 	 */
 	private static String clear() {
 		list.clear();
-		return String.format(CLEAR_LIST_MESSAGE, filename);
+		return String.format(CLEAR_LIST_MESSAGE, fileName);
 	}
 	/**
 	 * This operation prints out the content of the list
@@ -88,7 +96,7 @@ public class TextBuddy {
 	 */
 	private static void display() {
 		if (list.isEmpty()) {
-			System.out.println(String.format(EMPTY_LIST_MESSAGE,filename));
+			System.out.println(String.format(EMPTY_LIST_MESSAGE,fileName));
 		} else {
 			int index = 1;
 			for (String e: list) {
@@ -100,9 +108,9 @@ public class TextBuddy {
 	/**
 	 * This operation adds an item into the list
 	 */
-	private static String add(String newInput) {
-		list.add(newInput);
-		return String.format(ADDED_TO_LIST_MESSAGE, filename) + "\"" + newInput + "\"";
+	private static String add(String taskName) {
+		list.add(taskName);
+		return String.format(ADDED_TO_LIST_MESSAGE, fileName) + "\"" + taskName + "\"";
 	}
 	/**
 	 * This operation saves the content of the list in 
@@ -110,7 +118,7 @@ public class TextBuddy {
 	 * an index number from 1 will be given to each item
 	 */
 	private static void update() throws IOException {
-		FileWriter writer = new FileWriter(filename);
+		FileWriter writer = new FileWriter(fileName);
 		//BufferedWriter output = new BufferedWriter(writer);
 		for (int i = 0; i < list.size(); i ++) {
 			int index = i + 1;
