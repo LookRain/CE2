@@ -13,6 +13,7 @@ public class TextBuddy {
 	public static final String CLEAR_LIST_MESSAGE = "all content deleted from %s";
 	public static final String DELETE_MESSAGE = "deleted from %s: \"%s\"";
 	public static final String SORTED_MESSAGE = "All tasks have been sorted in alphabetical order";
+	public static final String NO_SEARCH_RESULT_MESSAGE = "No task contains such keyword";
 
 	public static void main(String[ ] args) throws IOException {
 		Scanner sc = new Scanner(System.in);
@@ -51,26 +52,29 @@ public class TextBuddy {
 	 */
 	static String executeCmd(String input) throws IOException {
 
-			if (input.split(" ")[0].equals("add")) {
-				String taskName = input.substring(4);
-				return add(taskName);
-			} else if (input.equals("display")) {
-				display();
-			} else if (input.equals("clear")) {
-				return clear();
-			} else if (input.equals("exit")) {
-				exit();
-			} else if (input.split(" ")[0].equals("delete")) {
-				String taskIndex = input.substring(7);
-				int index = Integer.parseInt(taskIndex);
-				return delete(index);
-			} else if (input.equals("sort")) {
-				sort();
-				return SORTED_MESSAGE;
-			} else {
-				return INVALID_COMMAND_MESSAGE;
-			}
-		
+		if (input.split(" ")[0].equals("add")) {
+			String taskName = input.substring(4);
+			return add(taskName);
+		} else if (input.equals("display")) {
+			display();
+		} else if (input.equals("clear")) {
+			return clear();
+		} else if (input.equals("exit")) {
+			exit();
+		} else if (input.split(" ")[0].equals("delete")) {
+			String taskIndex = input.substring(7);
+			int index = Integer.parseInt(taskIndex);
+			return delete(index);
+		} else if (input.equals("sort")) {
+			sort();
+			return SORTED_MESSAGE;
+		} else if (input.split(" ")[0].equals("search")) {
+			String keyWord = input.substring(7);
+			return search(keyWord);
+		} else {
+			return INVALID_COMMAND_MESSAGE;
+		}
+
 		return "";
 
 	}
@@ -147,5 +151,18 @@ public class TextBuddy {
 
 	public static void sort() {
 		Collections.sort(list);
+	}
+
+	public static String search(String key) {
+		String result = "";
+		for (int i = 0; i < list.size(); i ++) {
+			if (list.get(i).contains(key)) {
+				result += i + 1 + ". " + list.get(i) + System.lineSeparator();
+			} 
+		}
+		if (result.length() == 0) {
+			return NO_SEARCH_RESULT_MESSAGE;
+		}
+		return result.trim();
 	}
 }
